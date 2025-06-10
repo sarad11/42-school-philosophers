@@ -1,0 +1,127 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   action.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sardomin <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/23 18:19:18 by sardomin          #+#    #+#             */
+/*   Updated: 2025/05/23 18:19:46 by sardomin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philo.h"
+
+int	ft_is_any_philo_death(t_thread_philo **philo)
+{
+	long long	timestamp;
+	int	i;
+	
+	i = 0;
+	pthread_mutex_lock(&(*philo)[0].rules->death_mutex);
+	if ((*philo)[0].rules->someone_died[0])
+	{
+		printf("print3");
+		ft_print_philo_action(&(*philo)[(*philo)[0].rules->someone_died[1] - 1], " died");
+		pthread_mutex_unlock(&(*philo)[0].rules->death_mutex);
+		return (1);
+	}
+	else
+	{
+		while (i < (*philo)[0].rules->nb_philos)
+		{
+			pthread_mutex_lock(&(*philo)[i].mutex);
+			if ((*philo)[i].last_eaten)
+				timestamp = ft_timestamp_in_ms() - (*philo)[i].last_eaten;
+			else
+				timestamp = ft_timestamp_in_ms() - (*philo)->rules->start_time;
+			pthread_mutex_unlock(&(*philo)[i].mutex);
+			if (timestamp > (*philo)[0].rules->time_to_die)
+			{
+				
+				(*philo)[0].rules->someone_died[0] = 1;
+				(*philo)[0].rules->someone_died[1] = i + 1;
+				printf("print4\n");
+				ft_print_philo_action(&(*philo)[i], " died");
+				pthread_mutex_unlock(&(*philo)[0].rules->death_mutex);
+				return (1);
+			}
+			i++;
+		}
+	}
+	pthread_mutex_unlock(&(*philo)[0].rules->death_mutex);
+	return (0);
+}
+
+void	*ft_death_checker(void *arg)
+{
+	t_thread_philo *philo;
+	int	stop;
+	
+	philo = (t_thread_philo *)arg;
+	stop = 0;
+	while (!stop)
+	{
+		if (ft_is_any_philo_death(&philo))
+			stop = 1;
+		usleep(100);
+	}
+	return (NULL);
+}
+
+int	ft_take_forks(t_thread_philo *philo)
+{
+	pthread_mutex_lock(philo->left_fork);
+	if (ft_print_philo_action(philo, " has taken a fork"))
+	{
+		pthread_mutex_unlock(philo->left_fork);
+		return (1);
+		
+	}
+	pthread_mutex_lock(philo->right_fork);
+	if (ft_print_philo_action(philo, " has taken a fork"))
+	{
+		pthread_mutex_unlock(philo->right_fork);
+		pthread_mutex_unlock(philo->left_fork);
+		return (1);
+	}
+	return (0);
+}
+
+int	ft_start_eating(t_thread_philo *philo)
+{
+	pthread_mutex_lock(&philo->mutex);
+	philo->last_eaten = ft_timestamp_in_ms();
+	pthread_mutex_unlock(&philo->mutex);
+	printf("print5\n");
+	if (ft_print_philo_action(philo, " is eating"))
+		return (1);
+	usleep(philo->rules->time_to_eat * 1000);
+	return (0);
+}
+
+void	*ft_routine(void *arg)
+{
+	t_thread_philo	*philo;
+
+	philo = (t_thread_philo *)arg;
+	if (philo->id % 2 == 0)
+		usleep(1000);
+	while (!(philo->rules->someone_died[0]))
+	{
+		if (ft_take_forks(philo))
+			break ;
+		if (ft_start_eating(philo))
+			break;
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
+		printf("print6\n");
+		if (ft_print_philo_action(philo, " is sleeping"))
+			break ;
+		usleep(philo->rules->time_to_sleep * 1000);
+		printf("print7\n");
+		if (ft_print_philo_action(philo, " is thinking"))
+			break ;
+	}
+	return (NULL);
+}
