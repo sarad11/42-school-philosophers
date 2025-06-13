@@ -63,3 +63,5 @@ int	main(int argc, char **argv)
 	ft_free(&philos);
 	return (0);
 }
+
+

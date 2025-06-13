@@ -86,12 +86,16 @@ int	ft_destroy_philo_mutex(t_thread_philo **philos, int i)
 {
 	if (philos[i]->mutex_destroyed == 0)
 	{
+		printf("\nPhilo[%i]->mutex_destroyed =  %i\n", i, philos[i]->mutex_destroyed);
 		if (pthread_mutex_destroy(&philos[i]->mutex) != 0)
 		{
-			ft_print_error("Error. Destroy philo mutex failed\n", 33);
+			printf("\nPhilo[%i]->mutex_destroyed =  %i\n", i, philos[i]->mutex_destroyed);
+			ft_print_error("Error. Destroy philo mutex failed.\n", 33);
+			printf("\nerror Philo %i\n", philos[i]->id);
 			return (1);
 		}
 		philos[i]->mutex_destroyed = 1;
+		printf("\nPhilo[%i]->mutex_destroyed =  %i\n", i, philos[i]->mutex_destroyed);
 	}
 	return (0);
 }
