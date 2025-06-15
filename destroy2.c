@@ -1,34 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   destroy2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sardomin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/31 12:03:25 by sardomin          #+#    #+#             */
-/*   Updated: 2025/05/31 12:03:45 by sardomin         ###   ########.fr       */
+/*   Created: 2025/06/15 17:40:01 by sardomin          #+#    #+#             */
+/*   Updated: 2025/06/15 17:40:16 by sardomin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_free(t_thread_philo **philo)
+int	ft_destroy_fed_mutex(t_thread_philo **philos)
 {
-	t_rules	*rules;
-
-	if (!philo || !*philo)
-		return ;
-	rules = (*philo)[0].rules;
-	if (rules)
+	if (philos[0]->rules->fed_mutex_destroyed == 0)
 	{
-		if (rules->forks)
-			free(rules->forks);
-		if (rules->someone_died)
-			free(rules->someone_died);
-		if (rules->forks_mutex_destroyed)
-			free(rules->forks_mutex_destroyed);
-		free(rules);
+		if (pthread_mutex_destroy(&philos[0]->rules->fed_mutex) != 0)
+		{
+			ft_print_error("Error. Destroy fed_mutex failed\n", 34);
+			return (1);
+		}
 	}
-	free(*philo);
-	*philo = NULL;
+	philos[0]->rules->fed_mutex_destroyed = 1;
+	return (0);
 }

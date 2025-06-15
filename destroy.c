@@ -26,20 +26,6 @@ int	ft_destroy_death_mutex(t_thread_philo **philos)
 	return (0);
 }
 
-int	ft_destroy_fed_mutex(t_thread_philo **philos)
-{
-	if (philos[0]->rules->fed_mutex_destroyed == 0)
-	{
-		if (pthread_mutex_destroy(&philos[0]->rules->fed_mutex) != 0)
-		{
-			ft_print_error("Error. Destroy fed_mutex failed\n", 34);
-			return (1);
-		}
-	}
-	philos[0]->rules->fed_mutex_destroyed = 1;
-	return (0);
-}
-
 int	ft_destroy_print_mutex(t_thread_philo **philos)
 {
 	if (philos[0]->rules->print_mutex_destroyed == 0)
@@ -66,49 +52,18 @@ int	ft_destroy_forks(t_thread_philo **philos, int i)
 	}
 	philos[0]->rules->forks_mutex_destroyed[i] = 1;
 	return (0);
-	
-	/*
-	int	ret;
-
-	if (philos[0]->rules->forks_mutex_destroyed[i] == 0)
-	{
-		ret = pthread_mutex_trylock(&philos[0]->rules->forks[i]);
-		if (ret != 0)
-		{
-			printf("⚠️ Mutex %d is still locked or invalid (ret=%d)\n", i, ret);
-		}
-		else
-		{
-			printf("✅ Mutex %d can be locked (and will now be unlocked)\n", i);
-			pthread_mutex_unlock(&philos[0]->rules->forks[i]);
-		}
-
-		if (pthread_mutex_destroy(&philos[0]->rules->forks[i]) != 0)
-		{
-			ft_print_error("Error. Destroy forks mutex failed\n", 34);
-			return (1);
-		}
-	}
-	philos[0]->rules->forks_mutex_destroyed[i] = 1;
-	return (0);
-
-
-	*/
 }
 
 int	ft_destroy_philo_mutex(t_thread_philo **philos, int i)
 {
 	if ((*philos)[i].mutex_destroyed == 0)
 	{
-	//	printf("\nPhilo[%i]->mutex_destroyed =  %i\n", i, philos[i]->mutex_destroyed);
 		if (pthread_mutex_destroy(&(*philos)[i].mutex) != 0)
 		{
 			ft_print_error("Error. Destroy philo mutex failed.\n", 33);
-	//		printf("\nerror Philo %i\n", philos[i]->id);
 			return (1);
 		}
 		(*philos)[i].mutex_destroyed = 1;
-	//	printf("\nPhilo[%i]->mutex_destroyed =  %i\n", i, philos[i]->mutex_destroyed);
 	}
 	return (0);
 }

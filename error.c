@@ -15,7 +15,7 @@
 void	ft_arg_error(int argc, char **argv)
 {
 	long long	start_time;
-	
+
 	start_time = 0;
 	if (argc < 5 || argc > 6)
 		ft_print_error("Error: Must be five or six arguments.\n", 38);

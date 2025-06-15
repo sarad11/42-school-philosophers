@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-int	ft_init_philos(char **argv, t_thread_philo **philos, t_rules *rules)
+int	ft_init_ph(char **argv, t_thread_philo **philos, t_rules *rules)
 {
 	int	i;
 
@@ -32,35 +32,18 @@ int	ft_init_philos(char **argv, t_thread_philo **philos, t_rules *rules)
 			ft_print_error("Error. Philo mutex init failed\n", 31);
 			return (1);
 		}
-		//printf("\nmutex iniciado philo %i\n", (*philos)[i].id);
 		(*philos)[i].mutex_destroyed = 0;
 		i++;
 	}
 	return (0);
 }
 
-int	ft_init_rules(int argc, char **argv, t_rules **rules)
+int	ft_init_rules2(int nb, int argc, char **argv, t_rules **rules)
 {
 	int	i;
 
 	i = 0;
-	(*rules)->nb_philos = ft_atoi(argv[1]);
-	(*rules)->nb_forks = ft_atoi(argv[1]);
-	(*rules)->time_to_die = ft_atoi(argv[2]);
-	(*rules)->time_to_sleep = ft_atoi(argv[3]);
-	(*rules)->time_to_eat = ft_atoi(argv[4]);
-	if (!(*rules)->start_time)
-		(*rules)->start_time = ft_timestamp_in_ms();
-	(*rules)->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * ((*rules)->nb_philos));
-	if (!(*rules)->forks)
-		return (1);
-	(*rules)->someone_died = (int *)malloc(2 * sizeof(int));
-	if (!(*rules)->someone_died)
-		return (1);
-	(*rules)->someone_died[0] = 0;
-	(*rules)->someone_died[1] = 0;
-	(*rules)->death_printed = 0;
-	(*rules)->forks_mutex_destroyed = (int *)malloc(((*rules)->nb_philos) * sizeof(int));
+	(*rules)->forks_mutex_destroyed = (int *)malloc(nb * sizeof(int));
 	if (!(*rules)->forks_mutex_destroyed)
 		return (1);
 	while (i < (*rules)->nb_philos)
@@ -80,13 +63,44 @@ int	ft_init_rules(int argc, char **argv, t_rules **rules)
 	return (0);
 }
 
+int	ft_init_rules(int argc, char **argv, t_rules **rules)
+{
+	int	nb;
+
+	if (!rules || !(*rules) || !argv || !(*argv))
+		return (1);
+	(*rules)->nb_philos = ft_atoi(argv[1]);
+	nb = (*rules)->nb_philos;
+	(*rules)->nb_forks = ft_atoi(argv[1]);
+	(*rules)->time_to_die = ft_atoi(argv[2]);
+	(*rules)->time_to_sleep = ft_atoi(argv[3]);
+	(*rules)->time_to_eat = ft_atoi(argv[4]);
+	if (!(*rules)->start_time)
+		(*rules)->start_time = ft_timestamp_in_ms();
+	(*rules)->forks = (pthread_mutex_t *)malloc(nb * sizeof(pthread_mutex_t));
+	if (!(*rules)->forks)
+		return (1);
+	(*rules)->someone_died = (int *)malloc(2 * sizeof(int));
+	if (!(*rules)->someone_died)
+		return (1);
+	(*rules)->someone_died[0] = 0;
+	(*rules)->someone_died[1] = 0;
+	(*rules)->death_printed = 0;
+	if (ft_init_rules2(nb, argc, argv, rules))
+		return (1);
+	return (0);
+}
+
 int	ft_init(char **argv, t_rules **rules, t_thread_philo **philos)
 {
+	int	nb;
+
+	nb = ft_atoi(argv[1]);
 	*rules = (t_rules *)malloc(sizeof(t_rules));
 	if (!*rules)
 		return (1);
 	memset(*rules, 0, sizeof(t_rules));
-	*philos = (t_thread_philo *)malloc(sizeof(t_thread_philo) * ft_atoi(argv[1]));
+	*philos = (t_thread_philo *)malloc(nb * sizeof(t_thread_philo));
 	if (!*philos)
 	{
 		free(*rules);

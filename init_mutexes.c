@@ -35,7 +35,6 @@ int	ft_init_print_mutex(t_rules **rules)
 	if (pthread_mutex_init(&(*rules)->print_mutex, NULL) != 0)
 	{
 		ft_print_error("Error. Print mutex init failed\n", 32);
-		//TODO funcion free para liberar todos los mutex en caso de error
 		return (1);
 	}
 	(*rules)->print_mutex_destroyed = 0;
