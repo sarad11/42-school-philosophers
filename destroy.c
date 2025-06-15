@@ -14,7 +14,7 @@
 
 int	ft_destroy_death_mutex(t_thread_philo **philos)
 {
-	if (philos[0]->rules->death_mutex_destroyed == 0)
+	if (philos[0]->rules->fed_mutex_destroyed == 0)
 	{
 		if (pthread_mutex_destroy(&philos[0]->rules->death_mutex) != 0)
 		{
@@ -23,6 +23,20 @@ int	ft_destroy_death_mutex(t_thread_philo **philos)
 		}
 	}
 	philos[0]->rules->death_mutex_destroyed = 1;
+	return (0);
+}
+
+int	ft_destroy_fed_mutex(t_thread_philo **philos)
+{
+	if (philos[0]->rules->fed_mutex_destroyed == 0)
+	{
+		if (pthread_mutex_destroy(&philos[0]->rules->fed_mutex) != 0)
+		{
+			ft_print_error("Error. Destroy fed_mutex failed\n", 34);
+			return (1);
+		}
+	}
+	philos[0]->rules->fed_mutex_destroyed = 1;
 	return (0);
 }
 
@@ -115,6 +129,8 @@ int	ft_destroy_mutex(t_thread_philo **philos)
 	if (ft_destroy_print_mutex(philos) != 0)
 		return (1);
 	if (ft_destroy_death_mutex(philos) != 0)
+		return (1);
+	if (ft_destroy_fed_mutex(philos) != 0)
 		return (1);
 	return (0);
 }

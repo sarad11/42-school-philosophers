@@ -25,6 +25,7 @@ typedef struct s_rules
 	int	nb_philos;
 	int	nb_forks;
 	int	nb_times_philo_must_eat;
+	int	philos_fed;
 	int	time_to_die;
 	int	time_to_sleep;
 	int	time_to_eat;
@@ -32,11 +33,13 @@ typedef struct s_rules
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	death_mutex;
+	pthread_mutex_t fed_mutex;
 	int	*someone_died;
 	int	death_printed;
 	int	*forks_mutex_destroyed;
 	int	print_mutex_destroyed;
 	int	death_mutex_destroyed;
+	int	fed_mutex_destroyed;
 }	t_rules;
 
 typedef struct s_thread_philo
@@ -62,17 +65,21 @@ int		ft_init_rules_mutexes(t_rules **rules);
 int		ft_init_forks(t_rules **rules);
 int		ft_init_print_mutex(t_rules **rules);
 int		ft_init_death_mutex(t_rules **rules);
+int		ft_init_fed_mutex(t_rules **rules);
 //thread.c
 int		ft_start_threads(t_thread_philo *philos);
 int		ft_join_threads(int nb_philos, t_thread_philo *philos);
 int		ft_start_death_philo_threads(t_thread_philo *philos, pthread_t *death_thread);
+int		ft_start_fed_philo_threads(t_thread_philo *philos, pthread_t *fed_thread);
 int		ft_join_death_philo_thread(pthread_t death_thread);
+int		ft_join_fed_philo_thread(pthread_t fed_thread);
 //action.c
 void	*ft_routine(void *arg);
 int	ft_take_forks(t_thread_philo *philo);
 int	ft_start_eating(t_thread_philo *philo);
 void	*ft_death_checker(void *arg);
 int	ft_is_any_philo_death(t_thread_philo **philo);
+void	*ft_fed_checker(void *arg);
 //utils.c
 int		ft_atoi(const char *nptr);
 long long	ft_timestamp_in_ms(void);
@@ -89,6 +96,7 @@ int		ft_destroy_philo_mutex(t_thread_philo **philos, int i);
 int		ft_destroy_forks(t_thread_philo **philos, int i);
 int		ft_destroy_print_mutex(t_thread_philo **philos);
 int		ft_destroy_death_mutex(t_thread_philo **philos);
+int		ft_destroy_fed_mutex(t_thread_philo **philos);
 //free.c
 void	ft_free(t_thread_philo **philo);
 #endif

@@ -21,12 +21,31 @@ int	ft_join_death_philo_thread(pthread_t death_thread)
 	}
 	return (0);
 }
+int	ft_join_fed_philo_thread(pthread_t fed_thread)
+{
+	if (pthread_join(fed_thread, NULL) != 0)
+	{
+		write(2, "Error joining fed thread\n", 26);
+		return (1);
+	}
+	return (0);
+}
 
 int	ft_start_death_philo_threads(t_thread_philo *philos, pthread_t *death_thread)
 {
 	if (pthread_create(death_thread, NULL, &ft_death_checker, (void *)philos) != 0)
 	{
 		write(2, "Error creating death checker thread\n", 36);
+		return (1);
+	}
+	return (0);
+}
+
+int	ft_start_fed_philo_threads(t_thread_philo *philos, pthread_t *fed_thread)
+{
+	if (pthread_create(fed_thread, NULL, &ft_fed_checker, (void *)philos) != 0)
+	{
+		write(2, "Error creating fed checker thread\n", 35);
 		return (1);
 	}
 	return (0);

@@ -53,6 +53,17 @@ int	ft_init_death_mutex(t_rules **rules)
 	return (0);
 }
 
+int	ft_init_fed_mutex(t_rules **rules)
+{
+	if (pthread_mutex_init(&(*rules)->fed_mutex, NULL) != 0)
+	{
+		ft_print_error("Error. Fed mutex init failed\n", 30);
+		return (1);
+	}
+	(*rules)->fed_mutex_destroyed = 0;
+	return (0);
+}
+
 int	ft_init_rules_mutexes(t_rules **rules)
 {
 	if (ft_init_forks(rules) != 0)
@@ -60,6 +71,8 @@ int	ft_init_rules_mutexes(t_rules **rules)
 	if (ft_init_print_mutex(rules) != 0)
 		return (1);
 	if (ft_init_death_mutex(rules) != 0)
+		return (1);
+	if (ft_init_fed_mutex(rules) != 0)
 		return (1);
 	return (0);
 }

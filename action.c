@@ -22,7 +22,10 @@ int	ft_is_any_philo_death(t_thread_philo **philo)
 	if ((*philo)[0].rules->someone_died[0])
 	{
 	//	printf("print3");
-		ft_print_philo_action(&(*philo)[(*philo)[0].rules->someone_died[1] - 1], " died");
+		if ((*philo)[0].rules->nb_times_philo_must_eat && (*philo)[0].rules->philos_fed && ((*philo)[0].rules->philos_fed < (*philo)[0].rules->nb_times_philo_must_eat))
+		{
+			ft_print_philo_action(&(*philo)[(*philo)[0].rules->someone_died[1] - 1], " died");
+		}
 		pthread_mutex_unlock(&(*philo)[0].rules->death_mutex);
 		return (1);
 	}
@@ -68,6 +71,63 @@ void	*ft_death_checker(void *arg)
 		if (ft_is_any_philo_death(&philo))
 			stop = 1;
 		usleep(100);
+	}
+	return (NULL);
+}
+
+void	*ft_fed_checker(void *arg)
+{
+	t_thread_philo *philo;
+	t_rules *rules;
+	int	all_fed;
+	int	i;
+	
+	philo = (t_thread_philo *)arg;
+	rules = philo[0].rules;
+	
+	if (!philo || !rules || rules->nb_philos <= 0)
+    		return (NULL);
+	if (rules->nb_times_philo_must_eat > 0)
+	{
+	while (!(philo)[0].rules->someone_died[0])
+	{
+		all_fed = 1;
+		i = 0;
+		while (i < rules->nb_philos && !(philo)[0].rules->someone_died[0])
+		{
+	//		printf("\n\n i: %i\n\n", i);
+	//		printf("\nrules->nb_philos: %i\n", rules->nb_philos);
+	//		printf("\nrules->philo[%i].meals_eaten %i\n", i, philo[i].meals_eaten);
+			pthread_mutex_lock(&philo[i].mutex);
+			if (philo[i].meals_eaten < rules->nb_times_philo_must_eat)
+			{
+				all_fed = 0;
+				pthread_mutex_unlock(&philo[i].mutex);
+	//			printf("break\n");
+				break;
+				
+			}
+			pthread_mutex_unlock(&philo[i].mutex);
+			i++;
+		//	printf("all_fed: %i", all_fed);
+			if (!all_fed)
+				break;
+		}
+		//	printf("\nall fed\n");
+		if (all_fed && !(philo)[0].rules->someone_died[0])
+		{
+			pthread_mutex_lock(&rules->death_mutex);
+			if (!rules->someone_died[0])
+			{
+				rules->someone_died[0] = 1;
+				if (!rules->death_printed)
+					rules->death_printed = 1;
+			}
+			pthread_mutex_unlock(&rules->death_mutex);
+			break;
+		}
+		usleep(100);
+	}
 	}
 	return (NULL);
 }
@@ -120,6 +180,7 @@ int	ft_start_eating(t_thread_philo *philo)
 //	printf("\neating unlock philo %i mutex\n", philo->id);
 	if (ft_print_philo_action(philo, " is eating"))
 		return (1);
+	philo->meals_eaten++;
 	usleep(philo->rules->time_to_eat * 1000);
 	return (0);
 	

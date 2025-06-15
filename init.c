@@ -70,9 +70,11 @@ int	ft_init_rules(int argc, char **argv, t_rules **rules)
 	}
 	(*rules)->print_mutex_destroyed = -1;
 	(*rules)->death_mutex_destroyed = -1;
+	(*rules)->fed_mutex_destroyed = -1;
 	(*rules)->nb_times_philo_must_eat = -1;
 	if (argc == 6)
 		(*rules)->nb_times_philo_must_eat = ft_atoi(argv[5]);
+	(*rules)->philos_fed = 0;
 	if (ft_init_rules_mutexes(rules) != 0)
 		return (1);
 	return (0);

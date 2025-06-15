@@ -16,8 +16,11 @@ int	main(int argc, char **argv)
 {
 	t_thread_philo	*philos;
 	pthread_t	death_thread;
+	pthread_t	fed_thread;
 	t_rules			*rules;
 
+	if (argc == 6 && ft_atoi(argv[5]) == 0)
+		return (0);
 	if (argc < 5 || argc > 6 || ft_atoi(argv[1]) == 0 || ft_atoi(argv[1]) == 1)
 	{
 		ft_arg_error(argc, argv);
@@ -47,7 +50,24 @@ int	main(int argc, char **argv)
 		ft_free(&philos);
 		return (1);
 	}
-//	printf("\nstarting join process\n");
+	if (argc == 6)
+	{
+		if (ft_start_fed_philo_threads(philos, &fed_thread) != 0)
+		{
+			ft_join_threads(ft_atoi(argv[1]), philos);
+			ft_join_death_philo_thread(death_thread);
+			ft_join_fed_philo_thread(fed_thread);
+			ft_destroy_mutex(&philos);
+			ft_free(&philos);
+			return (1);
+		}
+		if (ft_join_fed_philo_thread(fed_thread) != 0)
+		{
+			ft_destroy_mutex(&philos);
+			ft_free(&philos);
+			return (1);
+		}
+	}
 	if (ft_join_death_philo_thread(death_thread)!= 0 || ft_join_threads(ft_atoi(argv[1]), philos))
 	{
 //		printf("\ndestroy4\n");

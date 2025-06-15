@@ -25,7 +25,7 @@ void	ft_arg_error(int argc, char **argv)
 	{
 		start_time = ft_timestamp_in_ms();
 		printf("%lld 1 has taken a fork\n", (ft_timestamp_in_ms() - start_time));
-		usleep(ft_atoi(argv[2]));
+		usleep(ft_atoi(argv[2]) * 1000);
 		printf("%lld 1 died\n", (ft_timestamp_in_ms() - start_time));
 	}
 }
