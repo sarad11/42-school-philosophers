@@ -89,45 +89,39 @@ void	*ft_fed_checker(void *arg)
     		return (NULL);
 	if (rules->nb_times_philo_must_eat > 0)
 	{
-	while (!(philo)[0].rules->someone_died[0])
-	{
-		all_fed = 1;
-		i = 0;
-		while (i < rules->nb_philos && !(philo)[0].rules->someone_died[0])
+		while (!(philo)[0].rules->someone_died[0])
 		{
-	//		printf("\n\n i: %i\n\n", i);
-	//		printf("\nrules->nb_philos: %i\n", rules->nb_philos);
-	//		printf("\nrules->philo[%i].meals_eaten %i\n", i, philo[i].meals_eaten);
-			pthread_mutex_lock(&philo[i].mutex);
-			if (philo[i].meals_eaten < rules->nb_times_philo_must_eat)
+			all_fed = 1;
+			i = 0;
+			while (i < rules->nb_philos && !(philo)[0].rules->someone_died[0])
 			{
-				all_fed = 0;
+				pthread_mutex_lock(&philo[i].mutex);
+				if (philo[i].meals_eaten < rules->nb_times_philo_must_eat)
+				{
+					all_fed = 0;
+					pthread_mutex_unlock(&philo[i].mutex);
+					break;		
+				}
 				pthread_mutex_unlock(&philo[i].mutex);
-	//			printf("break\n");
-				break;
-				
+				i++;
+				if (!all_fed)
+					break;
 			}
-			pthread_mutex_unlock(&philo[i].mutex);
-			i++;
-		//	printf("all_fed: %i", all_fed);
-			if (!all_fed)
-				break;
-		}
-		//	printf("\nall fed\n");
-		if (all_fed && !(philo)[0].rules->someone_died[0])
-		{
-			pthread_mutex_lock(&rules->death_mutex);
-			if (!rules->someone_died[0])
+			if (all_fed && !(philo)[0].rules->someone_died[0])
 			{
-				rules->someone_died[0] = 1;
-				if (!rules->death_printed)
-					rules->death_printed = 1;
+				pthread_mutex_lock(&rules->death_mutex);
+				pthread_mutex_lock(&rules->print_mutex);
+				if (!rules->someone_died[0])
+				{
+					rules->someone_died[0] = 1;
+					if (!rules->death_printed)
+						rules->death_printed = 1;
+				}
+				pthread_mutex_unlock(&rules->print_mutex);
+				pthread_mutex_unlock(&rules->death_mutex);
+				break;
 			}
-			pthread_mutex_unlock(&rules->death_mutex);
-			break;
 		}
-		usleep(100);
-	}
 	}
 	return (NULL);
 }

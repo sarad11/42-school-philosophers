@@ -20,8 +20,8 @@ int	ft_print_philo_action(t_thread_philo *philo, char *message_to_print)
 	if (!philo->rules->someone_died[0])
 	{
 		timestamp = ft_timestamp_in_ms() - philo-> rules->start_time;
-	//	printf("\nphilo %i print1\n", philo->id);
-		printf("%lld %i %s\n", timestamp, philo->id, message_to_print);
+		if (!philo->rules->someone_died[0])
+			printf("%lld %i %s\n", timestamp, philo->id, message_to_print);
 		pthread_mutex_unlock(&philo->rules->print_mutex);
 		return (0);
 	}
@@ -34,13 +34,11 @@ int	ft_print_philo_action(t_thread_philo *philo, char *message_to_print)
 			timestamp = ft_timestamp_in_ms() - philo->rules->start_time;
 		if (!(philo->rules)->death_printed)
 		{
-	//		printf("philo %i print2\n", philo->id);
 			printf("%lld %i %s\n", timestamp, philo->id, message_to_print);
 			pthread_mutex_unlock(&philo->rules->print_mutex);		
 		}
 		else
 		{
-	//		printf("\n philo %i print2b\n", philo->id);
 			pthread_mutex_unlock(&philo->rules->print_mutex);
 			return (1);
 		}
