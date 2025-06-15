@@ -15,13 +15,17 @@
 int	ft_is_any_philo_death(t_thread_philo **philo)
 {
 	long long	timestamp;
+	int			nb_meals_to_eat;
 	int			i;
 
 	i = 0;
+	nb_meals_to_eat = (*philo)[0].rules->nb_times_philo_must_eat;
 	pthread_mutex_lock(&(*philo)[0].rules->death_mutex);
 	if ((*philo)[0].rules->someone_died[0])
 	{
-		if ((*philo)[0].rules->nb_times_philo_must_eat && (*philo)[0].rules->philos_fed && ((*philo)[0].rules->philos_fed < (*philo)[0].rules->nb_times_philo_must_eat))
+		if ((*philo)[0].rules->nb_times_philo_must_eat \
+		&& (*philo)[0].rules->philos_fed \
+		&& ((*philo)[0].rules->philos_fed < nb_meals_to_eat))
 		{
 			ft_print_philo_action(&(*philo)[(*philo)[0].rules->someone_died[1] - 1], " died");
 		}

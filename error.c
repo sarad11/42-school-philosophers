@@ -14,18 +14,18 @@
 
 void	ft_arg_error(int argc, char **argv)
 {
-	long long	start_time;
+	long long	time;
 
-	start_time = 0;
+	time = 0;
 	if (argc < 5 || argc > 6)
 		ft_print_error("Error: Must be five or six arguments.\n", 38);
 	else if (ft_atoi(argv[1]) == 0)
 		ft_print_error("Error: There must be one philosopher.\n", 37);
 	else if (ft_atoi(argv[1]) == 1)
 	{
-		start_time = ft_timestamp_in_ms();
-		printf("%lld 1 has taken a fork\n", (ft_timestamp_in_ms() - start_time));
+		time = ft_timestamp_in_ms();
+		printf("%lld 1 has taken a fork\n", (ft_timestamp_in_ms() - time));
 		usleep(ft_atoi(argv[2]) * 1000);
-		printf("%lld 1 died\n", (ft_timestamp_in_ms() - start_time));
+		printf("%lld 1 died\n", (ft_timestamp_in_ms() - time));
 	}
 }
