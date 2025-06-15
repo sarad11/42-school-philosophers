@@ -169,12 +169,12 @@ int	ft_start_eating(t_thread_philo *philo)
 		return (1);
 //	printf("\neating lock philo %i mutex\n", philo->id);
 	philo->last_eaten = ft_timestamp_in_ms();
+	philo->meals_eaten++;
 	if (pthread_mutex_unlock(&philo->mutex) != 0)
 		return (1);
 //	printf("\neating unlock philo %i mutex\n", philo->id);
 	if (ft_print_philo_action(philo, " is eating"))
 		return (1);
-	philo->meals_eaten++;
 	usleep(philo->rules->time_to_eat * 1000);
 	return (0);
 	
