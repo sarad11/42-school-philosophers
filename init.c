@@ -32,7 +32,7 @@ int	ft_init_philos(char **argv, t_thread_philo **philos, t_rules *rules)
 			ft_print_error("Error. Philo mutex init failed\n", 31);
 			return (1);
 		}
-		printf("\nmutex iniciado philo[%i]\n", i);
+		//printf("\nmutex iniciado philo %i\n", (*philos)[i].id);
 		(*philos)[i].mutex_destroyed = 0;
 		i++;
 	}
