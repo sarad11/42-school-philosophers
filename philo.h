@@ -91,6 +91,8 @@ int			ft_start_eating(t_thread_philo *philo);
 //checkers.c
 void		*ft_death_chk(void *arg);
 void		*ft_fed_checker(void *arg);
+void		ft_meals_chk(t_thread_philo *philo, t_rules *rules, int i, int fed);
+void		ft_all_fed_no_death(t_rules *rules);
 //is_death.c
 int			ft_is_any_philo_death(t_thread_philo **philo);
 void		ft_any_dead(t_thread_philo **philo, int nb_meals_to_eat);
