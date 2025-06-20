@@ -16,7 +16,7 @@ CC = gcc
 
 FLAGS = -Wall -Werror -Wextra -g
 
-SCR = main.c init.c init_mutexes.c thread.c join.c action.c checkers.c utils.c print.c error.c destroy.c destroy2.c free.c
+SCR = main.c params_checkers.c init_philo_process.c init.c init_mutexes.c thread.c join.c action.c checkers.c is_death.c utils.c print.c error.c destroy.c destroy2.c free.c
 
 OBJ = $(SCR:.c=.o)
 

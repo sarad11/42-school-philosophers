@@ -57,6 +57,14 @@ typedef struct s_thread_philo
 
 //main
 long long	ft_timestamp_in_ms(void);
+//params_checkers.c
+int			ft_check_functions(int argc, char **argv);
+//init_philo_process.c
+int			init(int ac, char **av, t_rules **rules, t_thread_philo **philo);
+int			init2(char **argv, t_rules **rules, t_thread_philo **philos);
+int			death(char *argv, t_thread_philo **philos, pthread_t *death_thread);
+int			fed(char *argv, t_thread_philo **philos, pthread_t *death_thread);
+int			join(char *argv, t_thread_philo **philos, pthread_t *death_thread);
 //init.c
 int			ft_init(char **argv, t_rules **rules, t_thread_philo **philos);
 int			ft_init_rules(int argc, char **argv, t_rules **rules);
@@ -76,18 +84,21 @@ int			ft_start_fed_threads(t_thread_philo *philos, pthread_t *fed_thread);
 int			ft_join_threads(int nb_philos, t_thread_philo *philos);
 int			ft_join_death_philo_thread(pthread_t death_thread);
 int			ft_join_fed_philo_thread(pthread_t fed_thread);
-
 //action.c
 void		*routine(void *arg);
 int			ft_take_forks(t_thread_philo *philo);
 int			ft_start_eating(t_thread_philo *philo);
+//checkers.c
 void		*ft_death_chk(void *arg);
-int			ft_is_any_philo_death(t_thread_philo **philo);
 void		*ft_fed_checker(void *arg);
+//is_death.c
+int			ft_is_any_philo_death(t_thread_philo **philo);
+void		ft_any_dead(t_thread_philo **philo, int nb_meals_to_eat);
+int			ft_one_is_dead(t_thread_philo **philo);
 //utils.c
 int			ft_atoi(const char *nptr);
 //print.c
-int			ft_print_philo_action(t_thread_philo *philo, char *sms);
+int			print_act(t_thread_philo *philo, char *sms);
 int			ft_print_action2(t_thread_philo *philo, char *sms);
 void		ft_print_error(char *str, int n);
 //error.c

@@ -34,7 +34,7 @@ int	ft_print_action2(t_thread_philo *philo, char *sms)
 	return (0);
 }
 
-int	ft_print_philo_action(t_thread_philo *philo, char *sms)
+int	print_act(t_thread_philo *philo, char *sms)
 {
 	long long	timestamp;
 
