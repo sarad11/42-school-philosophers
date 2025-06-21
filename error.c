@@ -20,7 +20,7 @@ void	ft_arg_error(int argc, char **argv)
 	if (argc < 5 || argc > 6)
 		ft_print_error("Error: Must be five or six arguments.\n", 38);
 	else if (ft_atoi(argv[1]) == 0)
-		ft_print_error("Error: There must be one philosopher.\n", 37);
+		ft_print_error("Error: must be almost one philosopher.\n", 39);
 	else if (ft_atoi(argv[1]) == 1)
 	{
 		time = ft_timestamp_in_ms();
