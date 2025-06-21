@@ -59,6 +59,7 @@ typedef struct s_thread_philo
 long long	ft_timestamp_in_ms(void);
 //params_checkers.c
 int			ft_check_functions(int argc, char **argv);
+int			ft_check_arguments(char **argv);
 //init_philo_process.c
 int			init(int ac, char **av, t_rules **rules, t_thread_philo **philo);
 int			init2(char **argv, t_rules **rules, t_thread_philo **philos);
